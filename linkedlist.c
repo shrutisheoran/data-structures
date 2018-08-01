@@ -204,40 +204,94 @@ void print(node *h)
 		}	
 	}
 }
-void reverse(node **h, node **newList)
+node* reverse(node **h)
 {
-	node *curr = *h;
-	if(curr->next==NULL)
-	{
-//		printf("%d\n", curr->data);
-		addAtBeg(newList, curr->data);
+	/***********************
+		First Method
+	************************/
+
+//	if(*h==NULL) {}
+//	else
+//	{
+//		node *curr = *h;
+//		if(curr->next==NULL)
+//		{
+//			printf("%d\n", curr->data);
+//			addAtBeg(newList, curr->data);
+//		}
+//		else
+//		{
+//			addAtBeg(newList, curr->data);
+//			curr = curr->next;
+//			reverse(&curr, newList);
+//			printf("%d\n", curr->data);
+//		}
+//	}
+
+	/******************************
+		Better Method
+	*******************************/
+	node *first = *h;
+	if(first->next==NULL) {
+		return first;
 	}
-	else
-	{
-		addAtBeg(newList, curr->data);
-		curr = curr->next;
-		reverse(&curr, newList);
-//		printf("%d\n", curr->data);
+	else {
+		*h = (*h)->next;
+		node *second = reverse(h);
+		second->next = first;
+		first->next = NULL;
+		return first;
 	}
 }
 
 int checkPalindrome(node **h)
 {
-	node *h2 = NULL;
-	reverse(h, &h2);
-	node *curr = *h;
-	node *reverseList = h2;
-	while(curr->next)
-	{
-		if(curr->data!=reverseList->data)
-			break;
-		curr = curr->next;
-		reverseList = reverseList->next;
-	}
-	if(curr->next==NULL)
+	/*****************
+		1st Method
+	*****************/
+
+//	node *h2 = NULL;
+//	reverse(h, &h2);
+//	node *curr = *h;
+//	node *reverseList = h2;
+//	while(curr->next)
+//	{
+//		if(curr->data!=reverseList->data)
+//			break;
+//		curr = curr->next;
+//		reverseList = reverseList->next;
+//	}
+//	if(curr->next==NULL)
+//		return 1;
+//	else
+//		return 0;
+
+	/******************
+		Second Method
+	******************/
+
+	if(*h==NULL)
 		return 1;
 	else
-		return 0;
+	{
+		node *first = *h;
+		node *mid = middle(h);
+		if(mid->next)
+			mid = mid->next;
+		node *second = mid;
+		reverse(&second);
+		while(second&&mid&&mid->next&&first->next!=mid->next)
+		{
+			if(first->data!=second->data)
+				break;
+			first = first->next;
+			second = second->next;
+		}
+		if(first->data!=second->data)
+			return 0;
+		else
+			return 1;	
+	}
 }
 
 node* specifyNext(node **h, int d, node *add)
@@ -258,18 +312,19 @@ node* specifyNext(node **h, int d, node *add)
 int main()
 {
 	node *head = NULL;
-	addAtBeg(&head, 10);
-	node *Add = specifyNext(&head, 20, NULL);
-	specifyNext(&head, 30, NULL);
-	specifyNext(&head, 40, NULL);
-	specifyNext(&head, 50, Add);
+	addAtBeg(&head,1);
+	specifyNext(&head, 2, NULL);
+	node *Add = specifyNext(&head, 3, NULL);
+	specifyNext(&head, 4, NULL);
+	specifyNext(&head, 5, NULL);
+	specifyNext(&head, 6, NULL);
+//	printf("%d\n", circularList(&head));
 //	print(head);
 //	node *newList = NULL;
-//	reverse(&head, &newList);
-//	print(newList);
+//	reverse(&head);
+//	print(head);
 //	printf("%d\n", checkPalindrome(&head));
-//	printf("%d\n", middle(&head));
-	printf("%d\n", circularList(&head));
+//	printf("%d\n", middle(&head)->data);
 	return 0;
 
 }
