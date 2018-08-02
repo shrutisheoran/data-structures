@@ -165,12 +165,14 @@ node* middle(node **h)
 	{
 		node *fastptr = *h;
 		node *slowptr = *h;
+		node *temp = *h;
 		while(fastptr&&fastptr->next)
 		{
+			temp = slowptr;
 			fastptr = fastptr->next->next;
 			slowptr = slowptr->next;
 		}
-		return slowptr;
+		return temp;
 	}
 }
 
@@ -189,8 +191,10 @@ int circularList(node **h)
 	}
 	if(fastptr==NULL||fastptr->next==NULL)
 		return 0;
-	else
+	else {
+		printf("%d\n", fastptr->next->data);
 		return 1;
+	}
 }
 void print(node *h)
 {
@@ -232,9 +236,8 @@ node* reverse(node **h)
 		Better Method
 	*******************************/
 	node *first = *h;
-	if(first->next==NULL) {
+	if(first->next==NULL)
 		return first;
-	}
 	else {
 		*h = (*h)->next;
 		node *second = reverse(h);
@@ -244,6 +247,21 @@ node* reverse(node **h)
 	}
 }
 
+node* swapNodes(node **h)
+{
+	node *first = *h;
+	if(!first||!first->next)
+		return first;
+	else {
+		node *second = (*h)->next;
+		node *temp = (*h)->next->next;
+		node *m = swapNodes(&temp);
+		(*h) = first->next;
+		first->next = m;
+		second->next = first;
+		return second;
+	}
+}
 int checkPalindrome(node **h)
 {
 	/*****************
@@ -269,7 +287,6 @@ int checkPalindrome(node **h)
 	/******************
 		Second Method
 	******************/
-
 	if(*h==NULL)
 		return 1;
 	else
@@ -280,7 +297,7 @@ int checkPalindrome(node **h)
 			mid = mid->next;
 		node *second = mid;
 		reverse(&second);
-		while(second&&mid&&mid->next&&first->next!=mid->next)
+		while(second&&mid->next&&first->next!=mid->next)
 		{
 			if(first->data!=second->data)
 				break;
@@ -322,9 +339,9 @@ int main()
 //	print(head);
 //	node *newList = NULL;
 //	reverse(&head);
-//	print(head);
+	swapNodes(&head);
+	print(head);
 //	printf("%d\n", checkPalindrome(&head));
 //	printf("%d\n", middle(&head)->data);
 	return 0;
-
 }
